@@ -28,6 +28,7 @@ INSTALL_STEPS_FILE="${KUBESPRAY_CONFIG_DIR}/.install_steps"
 NGINX_CONFIG_FILE="${KUBE_ROOT}/config/nginx.conf"
 REGISTRY_CONFIG_FILE="${KUBE_ROOT}/config/registry.yaml"
 CONTAINERD_CONFIG_FILE="${KUBE_ROOT}/config/containerd.toml"
+CONTAINERD_SERVICE_FILE="${KUBE_ROOT}/config/containerd.service"
 
 # Include all functions from library/*.sh
 for file in ${KUBE_ROOT}/library/*.sh; do source ${file}; done

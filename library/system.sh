@@ -28,7 +28,14 @@ system::centos::config_repo(){
   if yum makecache -q > /dev/null; then
     infolog "Updated the repo file successfully"
   fi
-  yum install -q -y containerd.io*
+  local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
+  tar -xf ${containerd_tar_file} -C /usr/bin/
+  local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
+  cp -raf ${runc_file} /usr/bin/runc
+  chmod 0755 /usr/bin/runc
+  cp -f ${CONTAINERD_SERVICE_FILE} /etc/systemd/system/containerd.service
+  chmod 0755 /etc/systemd/system/containerd.service
+  chown root:root /etc/systemd/system/containerd.service
 }
 
 system::fedora::config_repo(){
@@ -40,7 +47,14 @@ system::fedora::config_repo(){
   if yum makecache -q > /dev/null; then
     infolog "Updated the repo file successfully"
   fi
-  yum install -q -y containerd.io*
+  local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
+  tar -xf ${containerd_tar_file} -C /usr/bin/
+  local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
+  cp -raf ${runc_file} /usr/bin/runc
+  chmod 0755 /usr/bin/runc
+  cp -f ${CONTAINERD_SERVICE_FILE} /etc/systemd/system/containerd.service
+  chmod 0755 /etc/systemd/system/containerd.service
+  chown root:root /etc/systemd/system/containerd.service
 }
 
 system::debian::config_repo(){
@@ -51,7 +65,14 @@ system::debian::config_repo(){
   if apt-get update -qq > /dev/null; then
     infolog "Updated the repo file successfully"
   fi
-  apt-get install -qq -y containerd.io=1.4.9-1  > /dev/null
+  local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
+  tar -xf ${containerd_tar_file} -C /usr/bin/
+  local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
+  cp -raf ${runc_file} /usr/bin/runc
+  chmod 0755 /usr/bin/runc
+  cp -f ${CONTAINERD_SERVICE_FILE} /etc/systemd/system/containerd.service
+  chmod 0755 /etc/systemd/system/containerd.service
+  chown root:root /etc/systemd/system/containerd.service
 }
 
 system::ubuntu::config_repo(){
@@ -62,7 +83,14 @@ system::ubuntu::config_repo(){
   if apt-get update -qq > /dev/null; then
     infolog "Updated the repo file successfully"
   fi
-  apt-get install -qq -y containerd.io=1.4.9-1  > /dev/null
+  local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/tools -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
+  tar -xf ${containerd_tar_file} -C /usr/bin/
+  local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
+  cp -raf ${runc_file} /usr/bin/runc
+  chmod 0755 /usr/bin/runc
+  cp -f ${CONTAINERD_SERVICE_FILE} /etc/systemd/system/containerd.service
+  chmod 0755 /etc/systemd/system/containerd.service
+  chown root:root /etc/systemd/system/containerd.service
 }
 
 system::disable_firewalld(){

@@ -58,11 +58,8 @@ common::install_tools(){
   chmod a+x ${USR_BIN_PATH}/{kubectl,helm,yq,mkcert,skopeo}
 
   # Install containerd and buildkit
-  local nerdctl_tar_file=$(find ${RESOURCES_NGINX_DIR}/tools -type f -name "nerdctl-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
-  tar -xf ${nerdctl_tar_file} -C /usr/local/bin/
-  local cni_plugins_tar_file=$(find ${RESOURCES_NGINX_DIR}/ -type f -name "cni-plugins-linux-${ARCH}-*.tgz" | sort -r --version-sort | head -n1)
-  mkdir -p /opt/cni/bin/
-  tar -xf ${cni_plugins_tar_file} -C /opt/cni/bin/
+  local nerdctl_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "nerdctl-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
+  tar -xf ${nerdctl_tar_file} -C /usr/bin/
   mkdir -p /etc/containerd
   DATA_DIR=$(yq  eval '.kubespray.data_dir' ${CONFIG_FILE})
   if [[ "${DATA_DIR}" == "null" ]]; then
@@ -80,6 +77,7 @@ common::install_tools(){
   /bin/cp -f ${CONTAINERD_CONFIG_FILE} /etc/containerd/config.toml
   sed -i "s|CONTAINERD_ROOT_DIR|${CONTAINERD_ROOT_DIR}|g"   /etc/containerd/config.toml
   sed -i "s|REGISTRY_DOMAIN|${REGISTRY_DOMAIN}|g"           /etc/containerd/config.toml
+  systemctl daemon-reload
   systemctl enable containerd ##buildkit
   systemctl restart containerd ##buildkit
   infolog "Common tools installed successfully"
