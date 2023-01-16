@@ -29,6 +29,8 @@ NGINX_CONFIG_FILE="${KUBE_ROOT}/config/nginx.conf"
 REGISTRY_CONFIG_FILE="${KUBE_ROOT}/config/registry.yaml"
 CONTAINERD_CONFIG_FILE="${KUBE_ROOT}/config/containerd.toml"
 CONTAINERD_SERVICE_FILE="${KUBE_ROOT}/config/containerd.service"
+CONTAINERD_CRI_BASE_CONFIG_FILE="${KUBE_ROOT}/config/cri-base.json"
+NERDCTL_CONFIG_FILE="${KUBE_ROOT}/config/nerdctl.toml"
 
 # Include all functions from library/*.sh
 for file in ${KUBE_ROOT}/library/*.sh; do source ${file}; done

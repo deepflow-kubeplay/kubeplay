@@ -4,6 +4,7 @@
 # Set logging colors
 #
 
+set +e
 NORMAL_COL=$(tput sgr0)
 RED_COL=$(tput setaf 1)
 WHITE_COL=$(tput setaf 7)
@@ -14,6 +15,7 @@ debuglog(){ printf "${WHITE_COL}%s${NORMAL_COL}\n" "$@"; }
 infolog(){ printf "${GREEN_COL}✔ %s${NORMAL_COL}\n" "$@"; }
 warnlog(){ printf "${YELLOW_COL}➜ %s${NORMAL_COL}\n" "$@"; }
 errorlog(){ printf "${RED_COL}✖ %s${NORMAL_COL}\n" "$@"; }
+set -e
 
 common::usage(){
   cat <<EOF
@@ -59,7 +61,12 @@ common::install_tools(){
 
   # Install containerd and buildkit
   local nerdctl_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "nerdctl-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
-  tar -xf ${nerdctl_tar_file} -C /usr/bin/
+  tar -xf ${nerdctl_tar_file} -C /usr/local/bin/
+  mkdir -p /etc/nerdctl
+  /bin/cp -f ${NERDCTL_CONFIG_FILE} /etc/nerdctl/nerdctl.toml
+  local cni_plugins_tar_file=$(find ${RESOURCES_NGINX_DIR}/ -type f -name "cni-plugins-linux-${ARCH}-*.tgz" | sort -r --version-sort | head -n1)
+  mkdir -p /opt/cni/bin/
+  tar -xf ${cni_plugins_tar_file} -C /opt/cni/bin/
   mkdir -p /etc/containerd
   DATA_DIR=$(yq  eval '.kubespray.data_dir' ${CONFIG_FILE})
   if [[ "${DATA_DIR}" == "null" ]]; then
@@ -74,7 +81,8 @@ common::install_tools(){
       REGISTRY_DOMAIN="${IMAGEREPO_DOMAIN}:${REGISTRY_HTTPS_PORT}"
   fi
   fi
-  /bin/cp -f ${CONTAINERD_CONFIG_FILE} /etc/containerd/config.toml
+  /bin/cp -f ${CONTAINERD_CONFIG_FILE} /etc/containerd/config.toml 
+  /bin/cp -f ${CONTAINERD_CRI_BASE_CONFIG_FILE} /etc/containerd/cri-base.json
   sed -i "s|CONTAINERD_ROOT_DIR|${CONTAINERD_ROOT_DIR}|g"   /etc/containerd/config.toml
   sed -i "s|REGISTRY_DOMAIN|${REGISTRY_DOMAIN}|g"           /etc/containerd/config.toml
   systemctl daemon-reload
@@ -148,6 +156,7 @@ common::generate_domain_certs(){
     # Copy domain.crt, domain.key to nginx certs directory
     infolog "Copy certs to ${COMPOSE_CONFIG_DIR}"
     cp -f ${CERTS_DIR}/rootCA.pem ${RESOURCES_NGINX_DIR}/certs/rootCA.crt
+    chmod -R 777 ${RESOURCES_NGINX_DIR}/certs/
   fi
 }
 
@@ -223,11 +232,11 @@ common::run_kubespray(){
   infolog "进入后台安装，可以ctrl-C退出"
   infolog "进入后台安装，可以ctrl-C退出"
   sleep 3
-  infolog "如果log停止，可以自行退出重新输入'nerdctl logs -f kubespray-runner'查看日志"
-  infolog "如果log停止，可以自行退出重新输入'nerdctl logs -f kubespray-runner'查看日志"
-  infolog "如果log停止，可以自行退出重新输入'nerdctl logs -f kubespray-runner'查看日志"
+  infolog "如果log停止，可以自行退出重新输入  tail -f ${KUBESPRAYDIR}/runner.log  查看日志"
+  infolog "如果log停止，可以自行退出重新输入  tail -f ${KUBESPRAYDIR}/runner.log  查看日志"
+  infolog "如果log停止，可以自行退出重新输入  tail -f ${KUBESPRAYDIR}/runner.log  查看日志"
   sleep 3
-  nerdctl logs -f kubespray-runner
+  tail -f ${KUBESPRAYDIR}/runner.log
 }
 
 # Push kubespray image to registry

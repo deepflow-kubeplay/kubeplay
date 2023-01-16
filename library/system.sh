@@ -29,7 +29,7 @@ system::centos::config_repo(){
     infolog "Updated the repo file successfully"
   fi
   local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
-  tar -xf ${containerd_tar_file} -C /usr/bin/
+  tar -xf ${containerd_tar_file} -C /usr/bin/ --strip-components=1
   local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
   cp -raf ${runc_file} /usr/bin/runc
   chmod 0755 /usr/bin/runc
@@ -48,7 +48,7 @@ system::fedora::config_repo(){
     infolog "Updated the repo file successfully"
   fi
   local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
-  tar -xf ${containerd_tar_file} -C /usr/bin/
+  tar -xf ${containerd_tar_file} -C /usr/bin/ --strip-components=1
   local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
   cp -raf ${runc_file} /usr/bin/runc
   chmod 0755 /usr/bin/runc
@@ -66,7 +66,7 @@ system::debian::config_repo(){
     infolog "Updated the repo file successfully"
   fi
   local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
-  tar -xf ${containerd_tar_file} -C /usr/bin/
+  tar -xf ${containerd_tar_file} -C /usr/bin/ --strip-components=1
   local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
   cp -raf ${runc_file} /usr/bin/runc
   chmod 0755 /usr/bin/runc
@@ -84,7 +84,7 @@ system::ubuntu::config_repo(){
     infolog "Updated the repo file successfully"
   fi
   local containerd_tar_file=$(find ${RESOURCES_NGINX_DIR}/tools -type f -name "containerd-*-linux-${ARCH}.tar.gz" | sort -r --version-sort | head -n1)
-  tar -xf ${containerd_tar_file} -C /usr/bin/
+  tar -xf ${containerd_tar_file} -C /usr/bin/ --strip-components=1
   local runc_file=$(find ${RESOURCES_NGINX_DIR}/files -type f -name "runc.${ARCH}" | sort -r --version-sort | head -n1)
   cp -raf ${runc_file} /usr/bin/runc
   chmod 0755 /usr/bin/runc
