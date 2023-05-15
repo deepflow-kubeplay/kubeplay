@@ -76,12 +76,12 @@ common::install_tools(){
     CONTAINERD_ROOT_DIR=${DATA_DIR}${CONTAINERD_YAML_ROOT_DIR##*\}\}}
     REGISTRY_DOMAIN=$(yq -e eval '.default.registry_domain' ${CONFIG_FILE})
     if [[ ${REGISTRY_DOMAIN} == "imagerepo_domain:registry_https_port" ]]; then
-      IMAGEREPO_DOMAIN=$(yq eval '.compose.imagerepo_domain' ${CONFIG_FILE}) 
+      IMAGEREPO_DOMAIN=$(yq eval '.compose.imagerepo_domain' ${CONFIG_FILE})
       REGISTRY_HTTPS_PORT=$(yq eval '.compose.registry_https_port' ${CONFIG_FILE})
       REGISTRY_DOMAIN="${IMAGEREPO_DOMAIN}:${REGISTRY_HTTPS_PORT}"
   fi
   fi
-  /bin/cp -f ${CONTAINERD_CONFIG_FILE} /etc/containerd/config.toml 
+  /bin/cp -f ${CONTAINERD_CONFIG_FILE} /etc/containerd/config.toml
   /bin/cp -f ${CONTAINERD_CRI_BASE_CONFIG_FILE} /etc/containerd/cri-base.json
   sed -i "s|CONTAINERD_ROOT_DIR|${CONTAINERD_ROOT_DIR}|g"   /etc/containerd/config.toml
   sed -i "s|REGISTRY_DOMAIN|${REGISTRY_DOMAIN}|g"           /etc/containerd/config.toml
@@ -151,7 +151,7 @@ common::generate_domain_certs(){
     mkdir -p ${CERTS_DIR} ${RESOURCES_NGINX_DIR}/certs
     infolog "Generating TLS cert for domain: ${IMAGEREPO_DOMAIN}"
     CAROOT=${CERTS_DIR} mkcert -install
-    CAROOT=${CERTS_DIR} mkcert -key-file ${CERTS_DIR}/domain.key -cert-file ${CERTS_DIR}/domain.crt ${IMAGEREPO_DOMAIN} ${DOMAIN} 
+    CAROOT=${CERTS_DIR} mkcert -key-file ${CERTS_DIR}/domain.key -cert-file ${CERTS_DIR}/domain.crt ${IMAGEREPO_DOMAIN} ${DOMAIN}
 
     # Copy domain.crt, domain.key to nginx certs directory
     infolog "Copy certs to ${COMPOSE_CONFIG_DIR}"
